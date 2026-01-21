@@ -1,0 +1,87 @@
+# pilotJSP Configuration File
+# Configuration for imitation learning in job-shop scheduling
+
+# Instance Generation
+instance:
+  n_jobs: 10
+  n_machines: 10
+  data_dir: "data"
+  seed: 42
+
+# Feature Extraction
+features:
+  n_features: 13
+  normalize: true
+  feature_names:
+    - processing_time
+    - remaining_processing_time
+    - num_remaining_operations
+    - work_remaining
+    - slack_time
+    - critical_ratio
+    - shortest_processing_time
+    - earliest_due_date
+    - arrival_time
+    - machine_workload
+    - machine_waiting_time
+    - operation_due_date
+    - total_work_content
+
+# Gurobi Expert
+expert:
+  time_limit: 300  # seconds
+  gap_limit: 0.01  # MIP gap
+  fallback_to_heuristic: true
+
+# Preference Learning
+preferences:
+  pair_generation_method: "trajectory"  # or "rollout"
+  n_rollouts_per_state: 10
+
+# DAgger Algorithm
+dagger:
+  n_iterations: 10
+  n_episodes_per_iter: 10
+  beta_initial: 1.0
+  beta_decay: 0.8
+
+# Ordinal Regression Model
+model:
+  learning_rate: 0.01
+  n_epochs: 100
+  regularization: 0.01
+  batch_size: 32
+
+# Pilot Heuristic
+pilot:
+  rollout_depth: 5
+  use_learned_policy: true
+
+# Training
+training:
+  train_test_split: 0.8
+  validation_split: 0.1
+  random_seed: 42
+
+# Evaluation
+evaluation:
+  n_test_instances: 20
+  baseline_methods:
+    - SPT  # Shortest Processing Time
+    - LPT  # Longest Processing Time
+    - FCFS  # First Come First Served
+    - random
+
+# Output
+output:
+  results_dir: "results"
+  models_dir: "models"
+  logs_dir: "logs"
+  save_intermediate: true
+  verbose: true
+
+# Data Handling
+data:
+  save_format: "csv"  # csv or json
+  compress: false
+  backup_old_results: true
