@@ -139,10 +139,10 @@ class PreferenceBuilder:
         Args:
             filepath: Path to save CSV file
         """
-        if not self.preference_pairs:
-            return
+        n_features = 13  # Default feature count
         
-        n_features = len(self.preference_pairs[0][0])
+        if self.preference_pairs:
+            n_features = len(self.preference_pairs[0][0])
         
         with open(filepath, 'w', newline='') as f:
             writer = csv.writer(f)
