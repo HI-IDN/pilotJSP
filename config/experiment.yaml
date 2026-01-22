@@ -1,0 +1,7 @@
+data:
+  name: jrnd_10x10
+  generator: taillard
+  instance_size: { jobs: 10, machines: 10 }
+  instances: 5
+  durationLB: 1
+  durationUB: 99
