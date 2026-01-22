@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import argparse
 from pathlib import Path
-from code.utils.convert import pfsp_txt_to_json
-from code.utils.enrich import extend_json
+from utils.convert import pfsp_txt_to_json
+from utils.enrich import extend_json
 import json
 
 

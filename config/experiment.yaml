@@ -1,7 +1,7 @@
 data:
-  name: jrnd_10x10
+  name: jrnd_6x5
   generator: taillard
-  instance_size: { jobs: 10, machines: 10 }
+  instance_size: { jobs: 6, machines: 5 }
   instances: 5
   durationLB: 1
   durationUB: 99

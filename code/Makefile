@@ -5,7 +5,7 @@ SHELL := /bin/bash
 # CONFIG — Read from YAML using yq
 # -------------------------------------------------------------------
 YQ       := yq -r
-CFG      := config/experiment.yaml
+CFG      := ../config/experiment.yaml
 
 GENERATOR := $(shell $(YQ) '.data.generator' $(CFG))
 JOBS      := $(shell $(YQ) '.data.instance_size.jobs' $(CFG))
@@ -13,12 +13,12 @@ MACHINES  := $(shell $(YQ) '.data.instance_size.machines' $(CFG))
 COUNT     := $(shell $(YQ) '.data.instances' $(CFG))
 NAME      := $(shell $(YQ) '.data.name' $(CFG))
 
-OUT_ROOT  := data/$(NAME)
+OUT_ROOT  := ../data/$(NAME)
 
 # -------------------------------------------------------------------
 # fspgen download + build into external/fspgen
 # -------------------------------------------------------------------
-GEN_DIR     := external/fspgen
+GEN_DIR     := ../external/fspgen
 FSPGEN_BIN  := $(GEN_DIR)/fspgen
 FSPGEN_TGZ  := $(GEN_DIR)/fspgen.tar.gz
 FSPGEN_URL  := https://www.cs.colostate.edu/sched/generator/fspgen.tar.gz
@@ -53,16 +53,16 @@ $(OUT_ROOT)/problem_%.txt: $(FSPGEN_BIN)
 	echo "[OK] Generated $@"
 
 
-$(OUT_ROOT)/problem_%.json: $(OUT_ROOT)/problem_%.txt | code/scripts/label_problem_data.py
+$(OUT_ROOT)/problem_%.json: $(OUT_ROOT)/problem_%.txt | label_problem_data.py
 	@echo "[LABEL] Converting $< -> $@"
-	python3 -m code.scripts.label_problem_data --input $< --output $@
+	python3 label_problem_data.py --input $< --output $@
 	@echo "[OK] Converted $< to $@"
 
 # -------------------------------------------------------------------
 # Build the list of expected files
 # -------------------------------------------------------------------
 ALL_TARGETS := $(foreach n,$(shell seq -f "%04g" 1 $(COUNT)), \
-                     $(OUT_ROOT)/problem_$(n).json)
+                     $(OUT_ROOT)/problem_$(n).txt)
 
 .PHONY: generate_problems
 generate_problems: fspgen
