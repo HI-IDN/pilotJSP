@@ -43,7 +43,7 @@ data:
   durationLB: 1
   durationUB: 99
   set: train 
-  file: data/j.rnd.4x5.train.txt
+  file: data/Raw/j.rnd.4x5.train.txt
 ```
 
 Notes:
