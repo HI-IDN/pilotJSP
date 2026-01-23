@@ -1,8 +1,0 @@
-# Requirements for the project
-yq
-
-# Core runtime
-pyyaml>=6.0
-
-# Optional: exact makespan solver (requires Gurobi license)
-gurobipy>=10.0.3

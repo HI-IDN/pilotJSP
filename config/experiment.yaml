@@ -1,7 +1,11 @@
+domain: jsp
+features: [makespan, slack, wrm]
 data:
-  name: jrnd_6x5
+  name: j.rnd.4x5
   generator: taillard
-  instance_size: { jobs: 6, machines: 5 }
-  instances: 5
+  instance_size: { jobs: 4, machines: 5 }
+  instances: 1
   durationLB: 1
   durationUB: 99
+  set: train
+  file: data/j.rnd.4x5.train.txt

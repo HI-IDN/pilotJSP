@@ -1,106 +1,85 @@
-# pilotJSP
-Code repository accompanying the LION20 conference paper:
+﻿# ALICE Scheduling Framework
 
-**Learning from Expert Optimization: Expert‑Like Lookahead Policies via Pilot Heuristics**
+This repository is the C++ implementation of the ALICE framework described in the PhD thesis 
+Ingimundardóttir, H. (2016). ALICE: Analysis & Learning Iterative Consecutive Executions 
+(Doctoral dissertation).
 
-This project implements an active imitation‑learning pipeline (DAgger) for the Job‑Shop Scheduling Problem (JSP). The goal is to learn a dispatching model that behaves like an expert MIP solver and can be used as a pilot heuristic inside a limited‑lookahead scheduling procedure.
+The goal is to provide a modular library for building scheduling experiments, starting with Job-Shop
+Scheduling (JSP) and extending to other shop types later on.
 
----
-
-## 🔧 Overview of the Pipeline
-
-The pipeline performs the following steps:
-
-1. **Generate benchmark JSP instances** using the official Colorado State University JSP generator:  
-   https://www.cs.colostate.edu/sched/generator/
-
-2. **Query an optimal expert (MIP) solver**  
-   Gurobi (v13.0 or newer) is used to compute optimal dispatch decisions at each scheduling step.
-
-3. **Extract 13 standard dispatching features**  
-   Computed at each decision point (100 steps for a 10×10 JSP).
-
-4. **Construct pairwise preference datasets**  
-   Expert decisions are transformed into ordinal regression targets.
-
-5. **Train a dispatching model**  
-   A learned model is embedded inside a pilot heuristic with limited lookahead.
+The current focus is data ingestion + configuration so we can load benchmark instances and wire them
+to reusable scheduling components.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
-pilotJSP/
-├── config/                # YAML configuration files
-├── data/                  # <gitignored> generated JSP instances
-├── code/                  # main codebase
-└── README.md
+jsp/
++-- config/                # YAML configuration files
++-- data/                  # local sample JSP instances
++-- examples/              # small CLI examples
++-- include/               # public C++ headers
++-- src/                   # library sources
++-- CMakeLists.txt
++-- README.md
 ```
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
-All experiment parameters are controlled using a YAML file, e.g.:
-```
-config/experiment.yaml
-```
-The configuration file is **self‑documenting**, so the README does not duplicate parameter descriptions.
+The library reads a YAML experiment file (currently `config/experiment.yaml`). The loader is
+intentionally small and strict, so the config keys should match this schema:
 
-Run an experiment:
-```bash
-make fspgen # downloads and builds the problem generator
-make generate_problems # creates the problem instances and labels them
 ```
+domain: jsp
+features: [makespan, slack, wrm]
+data:
+  name: j.rnd.4x5
+  generator: taillard
+  instance_size: { jobs: 4, machines: 5 }
+  instances: 1
+  durationLB: 1
+  durationUB: 99
+  set: train 
+  file: data/j.rnd.4x5.train.txt
+```
+
+Notes:
+
+- `domain` is the scheduling family (for example `jsp`).
+- `features` toggles the feature set by name. If omitted or empty, all features for the domain are
+  enabled by default.
+- `file` is optional; if omitted, the loader builds a filename from `name` or `generator` +
+  `instance_size`.
 
 ---
 
-## 📦 Generating JSP Instances
+## Build and Run (Example)
 
-This repository uses two families of instances:
-
-- **jsp-rnd** — uniform random processing times
-- **jsp-rndn** — narrow distribution (reduced variance)
-
-You can create instances automatically using our script. Run:
-```bash
-bash scripts/generate_instances.sh
 ```
-This downloads and extracts the desired number of instances.
+cmake -S . -B build
+cmake --build build
+./build/alice_jsp_inspect config/experiment.yaml
+```
+
+The example reads the config, locates the data file, and prints basic dataset info.
 
 ---
 
-## 🗂️ Data Directory
-All generated data is stored under:
+## Citation
+
+If you use this repository, cite the thesis (TODO update to new publication):
+
 ```
-data/
-    jsp-rnd/
-    jsp-rndn/
-```
-
-
----
-
-## ▶️ Running an Experiment
-
-```bash
-python src/train.py --config config/experiment.yaml
-```
-This performs:
-- instance loading/generation
-- expert querying
-- feature computation
-- dataset construction
-- model training
-- evaluation with a pilot heuristic
-
----
-
-## 📖 Citation
-If you use this repository, please cite the LION20 paper:
-```
-[Insert citation entry]
+Ingimundardóttir, H. (2016). ALICE: Analysis & Learning Iterative Consecutive Executions (Doctoral dissertation).
 ```
 
----
+
+
+
+
+
+
+
